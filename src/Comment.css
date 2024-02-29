@@ -1,0 +1,56 @@
+.back-button {
+    background-color: #114d6f;
+    color: white;
+    font-size: larger;
+    border-radius: 5px;
+    text-decoration: none;
+}
+.button{
+    text-decoration: none;
+}
+.btn:hover {
+    color: white;
+}
+
+.comment {
+    margin: 30px 50px 50px 50px;
+}
+
+.card-userName {
+    text-align: right;
+    font-family: "Dancing Script", cursive;
+    font-size: 20px;
+    font-weight: bolder;
+}
+
+.userName {
+    text-decoration: none;
+    color: #1f9eb7;
+}
+
+.comment-title {
+    color: #00B4D8;
+}
+
+.comment-container{
+   border: 3px solid #91afc0;
+    padding: 10px 10px 10px 10px;
+  
+}
+
+.comment-userName{
+    color: #07353e;
+    text-align: right;
+    display: block;
+    font-family: "Dancing Script", cursive;
+    font-size: 20px;
+    font-weight: bolder;
+   
+}
+
+.comment-info{
+    padding: 5px 5px 5px 5px;
+    border: 1px solid #1f9eb7;
+    background: rgb(210,229,240);
+    background: linear-gradient(90deg, rgba(210,229,240,1) 76%, rgba(57,181,217,1) 100%);
+}

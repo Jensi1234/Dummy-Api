@@ -1,0 +1,91 @@
+.post-container {
+    border-color: black;
+    margin: 30px 100px 50px 100px;
+}
+
+.userName {
+    text-align: right;
+}
+
+.card {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.card-link {
+    text-decoration: none;
+    color: black;
+}
+
+.card-header {
+    background-color: #114d6f;
+    color: white;
+}
+
+.card-text {
+    word-spacing: 5px;
+}
+
+.user {
+    text-decoration: none;
+    color: #1f9eb7;
+    font-family: "Dancing Script", cursive;
+    font-size: 20px;
+    font-weight: bolder;
+}
+
+.loading-gif {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+}
+
+.input-post-title{
+    width: 100%;
+}
+.input-post-body{
+    width: 100%;
+
+}
+
+.post-box{
+    border: 2px solid #1f9eb7;
+    border-radius: 6px;
+    background: rgb(124,156,166);
+    background: linear-gradient(90deg, rgba(124,156,166,1) 80%, rgba(17,77,111,1) 100%);
+    margin: 50px 100px 50px 100px;
+}
+
+.input-post-title{
+    height: 38px;
+}
+
+.input-post-body{
+   
+}
+
+.down-arrow{
+    margin-right: 30px;
+    width: 40px;
+    height: 40px;
+    color: #114d6f;
+    position: fixed;
+    top:50;
+    right:5;  
+    z-index: 1; 
+}
+
+.up-arrow{
+    margin-right: 30px;
+    width: 40px;
+    height: 40px;
+    color: #114d6f;
+    position: fixed;
+    bottom:0;
+    margin-bottom: 40px;
+    z-index: 1;  
+}
+
+.post-btn{
+    background-color: #ffffff !important;
+    color: #114d6f !important;
+}

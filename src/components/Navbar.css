@@ -5,6 +5,9 @@
     margin: 10px 10px 10px 10px ;
     font-weight: bolder;
     font-family: "Jura", sans-serif;
+    position: sticky;
+    top:10px;
+    z-index: 1;
 }
 
 .navbar-brand{
