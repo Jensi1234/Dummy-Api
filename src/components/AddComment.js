@@ -12,7 +12,6 @@ const AddComment = ({ addNewComment, isSubmitting }) => {
       newComment: '',
     })
   }
-
   return (
     <>
       <div className="comment-box p-2 mt-3">

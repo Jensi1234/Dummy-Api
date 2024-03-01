@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { FaCommentAlt,  FaEdit } from "react-icons/fa";
@@ -66,7 +65,6 @@ const Comment = () => {
       setIsSubmitting(false);
     }
   };
-
 
   const deleteComment = async (id) => {
     try {
