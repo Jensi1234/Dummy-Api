@@ -59,10 +59,6 @@
     height: 38px;
 }
 
-.input-post-body{
-   
-}
-
 .down-arrow{
     margin-right: 30px;
     width: 40px;
@@ -88,4 +84,5 @@
 .post-btn{
     background-color: #ffffff !important;
     color: #114d6f !important;
+    
 }

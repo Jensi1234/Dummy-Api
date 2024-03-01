@@ -1,7 +1,9 @@
 
 import React, { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
-import { FaCommentAlt } from "react-icons/fa";
+import { FaCommentAlt,  FaEdit } from "react-icons/fa";
+import AddComment from "./AddComment";
+import { MdDelete } from "react-icons/md";
 import gif from './Iphone-spinner-2.gif'
 import './Comment.css'
 
@@ -11,9 +13,8 @@ const Comment = () => {
   const [post, setPost] = useState([]);
   const [comments, setComment] = useState([])
   const [users, setUsers] = useState([])
-  const [addNewComment, setNewComment] = useState('')
-  const [newUsername, setNewUsername] = useState('')
   const { pid } = useParams();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     async function fetchPostDetails() {
@@ -26,7 +27,7 @@ const Comment = () => {
         const commentData = await fetch(`https://dummyjson.com/posts/` + pid + `/comments`)
         const data = await commentData.json()
         setComment(data.comments)
-        console.log(comments)
+        // console.log(comments)
 
         const getUserId = postData.userId || []
         let usersData = await fetch(`https://dummyjson.com/users/${getUserId}`)
@@ -39,26 +40,45 @@ const Comment = () => {
     }
     fetchPostDetails();
     setIsLoading(false);
-
-
   }, [pid]);
 
-  const changeComment = (e) => {
-    setNewComment(e.target.value)
-  }
-  const addComment = () => {
-    const newCommentObj = [...comments]
-    newCommentObj.push({
-      body: addNewComment,
-      postId: pid,
-      user: {
-        username: newUsername
+  const addNewComment = async (commentData) => {
+    setIsSubmitting(true);
+    try {
+      const response = await fetch('https://dummyjson.com/comments/add', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          body: commentData.newComment,
+          postId: pid,
+          userId: 5,
+        }),
+      });
+      if (!response.ok) {
+        throw new Error('Failed to add a new comment');
       }
-    })
-    setComment(newCommentObj);
-    console.log(newCommentObj)
-    setNewComment('')
-    setNewUsername('')
+      const newComment = await response.json();
+      setComment([...comments, newComment])
+      console.log(comments)
+    } catch (error) {
+      console.error('Error adding a new comment:', error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+
+  const deleteComment = async (id) => {
+    try {
+      console.log(id)
+      const response = await fetch(`https://dummyjson.com/comments/${id}`, {
+        method: 'DELETE',
+      });
+      const deletedComment = await response.json()
+      setComment(comments.filter((comment) => comment.id !== id));
+    } catch (error) {
+      console.error('Error deleting comment:', error);
+    }
   }
 
   if (isLoading) {
@@ -76,9 +96,9 @@ const Comment = () => {
     );
   }
 
-  console.log(post);
-  console.log(comments);
-  console.log(users)
+  // console.log(post);
+  // console.log(comments);
+  // console.log(users)
 
   return (
     <>
@@ -94,30 +114,20 @@ const Comment = () => {
               <a href='#' className='userName'>
                 By {users.username}
               </a>
-            </div>
+            </div> 
             <h5 className="comment-title"> <FaCommentAlt /> Comments</h5>
             <div className="comment-container">
-              {comments.length !== 0 ?
-                comments.map((commentData, index) => (
-                  <div key={index} className="comment-info">
-                    <span>{commentData.body}</span>
+              {comments && comments.length !== 0 ?
+                comments.map((commentData, id) => (
+                  <div key={id} className="comment-info ">
+                    <FaEdit className="edit-comment fs-4 me-2" />
+                    <MdDelete className="delete-comment fs-4" onClick={() => deleteComment(commentData.id)} />
+                   <span className="ms-3">{commentData.body}</span>  
                     <span className="comment-userName"> By {commentData.user.username}</span>
                   </div>))
                 : <p>no Comments...</p>
               }
-
-              <div className="comment-box p-2 mt-3">
-                <div className="mt-3 fs-5">Add Comments</div>
-                <textarea rows='4' className="input-comment my-3" placeholder="Share your opinion..." aaria-describedby="button-addon2"
-                  value={addNewComment}
-                  onChange={changeComment}></textarea>
-                <div className="d-flex align-items-center">
-                  <input className="input-username d-inline" placeholder="Add Username..." aaria-describedby="button-addon2"
-                    value={newUsername}
-                    onChange={(e) => setNewUsername(e.target.value)} />
-                  <button class="btn comment-btn ms-3 comment-btn" type="button" id="button-addon2" onClick={addComment}>Comment</button>
-                </div>
-              </div>
+              <AddComment addNewComment={addNewComment} isSubmitting={isSubmitting} />
             </div>
           </div>
         </div>
@@ -127,4 +137,8 @@ const Comment = () => {
 }
 
 export default Comment;
+
+
+
+
 
