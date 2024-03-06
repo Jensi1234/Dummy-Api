@@ -1,15 +1,14 @@
 .user-img {
-    flex:4
+    flex: 4
 }
 
-.image{
+.image {
     width: 80%;
 }
 
 .user-details {
-    flex:7;
+    flex: 7;
 }
-
 
 .user-info {
     font-weight: bolder;
@@ -25,7 +24,7 @@
 }
 
 .user-data {
-    font-size: 20px;
+    font-size: 16px;
 }
 
 .user-data-part1 {
@@ -36,43 +35,37 @@
     flex: 1
 }
 
-.user-title{
+.user-title {
     font-size: 60px;
-    text-align: Center;
+    text-align: start;
     text-shadow: 2px 2px 5px rgb(66, 117, 132);
     margin-bottom: 0;
 }
 
 @media screen and (max-width:768px) {
-
-    .user-containers{
-        display:flex;
+    .user-containers {
+        display: flex;
         flex-direction: column !important;
-
     }
 
-   .user-details {
-     justify-content: center;
-     padding: 20px 20px 20px 20px;
-        
-    }
-   
-}
-
-
-@media screen and (max-width:480px){
-    .user-containers{
-        display:flex;
-        flex-direction: column !important;
-     }
-
-     .user-details {
+    .user-details {
         justify-content: center;
         padding: 20px 20px 20px 20px;
-           
-       }
-       .user-data{
-        flex-direction: column !important;
+    }
+}
 
-       }
+@media screen and (max-width:480px) {
+    .user-containers {
+        display: flex;
+        flex-direction: column !important;
+    }
+
+    .user-details {
+        justify-content: center;
+        padding: 20px 20px 20px 20px;
+    }
+
+    .user-data {
+        flex-direction: column !important;
+    }
 }

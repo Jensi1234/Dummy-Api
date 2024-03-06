@@ -1,160 +1,185 @@
-posts.js
-import React, { useState, useEffect } from "react";
-import Comments from "./Comments";
-const Post = () => {
-    const [isLoading, setIsLoading] = useState(true);
-    const [posts, setPosts] = useState([]);
-    const [error, setError] = useState();
-    const [selectedPost, setSelectedPost] = useState(null);
-    useEffect(() => {
-        const fetchedPostData = async () => {
-            setIsLoading(true);
-            try {
-                const responsePost = await fetch("https://dummyjson.com/posts");
-                const responseUser = await fetch("https://dummyjson.com/users");
-                const data = await responsePost.json();
-                const usersRes = await responseUser.json();
-                const users = usersRes.users || [];
-                const fetchedPosts = (data.posts || []).map((post) => {
-                    const user = users.find((user) => user.id === post.userId);
-                    return {
-                        ...post,
-                        username: user?.username,
-                    };
-                });
-                setPosts(fetchedPosts);
-            } catch (error) {
-                console.error("Error fetching post data: ", error);
-                setError("Error while loading posts");
-            }
-            setIsLoading(false);
-        };
-        fetchedPostData();
-    }, []);
-    const toggleCommentBox = (post) => {
-        setSelectedPost(post);
-    };
-    if (isLoading) {
-        return (
-            <div className="container-fluid">
-                <div>Loading...</div>
-            </div>
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import loader from "./Images/Rounded blocks.gif";
+import errorSymbol from "./Images/Error.gif";
+import Addpost from "./AddPost";
+function Posts() {
+  const [postData, setPostData] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState();
+  const navigate = useNavigate();
+  const handlePostClick = (postId) => {
+    navigate(`/posts/comments/${postId}`, {
+      state: { postData: postData[postId - 1] },
+    });
+  };
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const responseOfData = await fetch(
+          "https://dummyjson.com/posts?limit=150"
         );
-    }
-    if (error) {
-        return (
-            <div className="container-fluid">
-                <div>{error}</div>
-            </div>
+        const responseOfUsers = await fetch(
+          "https://dummyjson.com/users?limit=100"
         );
+        const pData = await responseOfData.json();
+        const uData = await responseOfUsers.json();
+        const users = uData.users || [];
+        const fetchedPosts = (pData.posts || []).map((post) => {
+          const user = users.find((user) => user.id === post.userId);
+          return {
+            ...post,
+            username: user ? user.username : "Unknown",
+          };
+        });
+        setPostData(fetchedPosts);
+        setIsLoading(false);
+      } catch (error) {
+        setIsLoading(false);
+        setError("Error while fetching data");
+        console.log("Error in fetching : ", error);
+      }
     }
+    fetchData();
+  }, []);
+  const onAddPost = (postDetail) => {
+    setPostData([
+      ...postData,
+      {
+        id: postDetail.postId,
+        title: postDetail.title,
+        body: postDetail.data,
+        username: postDetail.name,
+      },
+    ]);
+  };
+  if (isLoading) {
     return (
-        <div className="container-fluid">
-            {!selectedPost && (
-                <div className="container-fluid">
-                    {posts.map((post, index) => (
-                        <div
-                            key={index}
-                            className="container-fluid my-4 d-flex flex-column p-3 post-container"
-                            onClick={() => toggleCommentBox(post)}
-                        >
-                            <h3>
-                                {post.id}. {post.title}
-                            </h3>
-                            <hr />
-                            <p>{post.body}</p>
-                            <p className="align-self-end">
-                                {post.username ? `-By ${post.username}` : "Unknown"}
-                            </p>
-                        </div>
-                    ))}
-                </div>
-            )}
-            {selectedPost && (
-                <Comments
-                    post={selectedPost}
-                    backToPost={() => toggleCommentBox(null)}
-                />
-            )}
-        </div>
+      <div className="container text-center ">
+        <img src={loader} alt="Loading ... " style={{ opacity: 0.5 }} />
+      </div>
     );
-};
-export default Post;
-12: 46
-comments.js
-import React, { useState, useEffect } from "react";
-const Comments = ({ post, backToPost }) => {
-    const [commentsData, setCommentsData] = useState([]);
-    const [loading, setLoading] = useState(true);
-    useEffect(() => {
-        const fetchedCommentData = async () => {
-            try {
-                const response = await fetch("https://dummyjson.com/comments/post/" + post.id);
-                const commentsArray = await response.json();
-                setCommentsData(commentsArray.comments);
-                setLoading(false);
-            } catch (error) {
-                console.error("Error fetching comment data:", error);
-                setLoading(false);
-            }
-        };
-        fetchedCommentData();
-    }, [post.id]);
+  }
+  if (error) {
     return (
-        <div className="container-fluid">
-            <div className="container-fluid mt-5 comments-container d-flex flex-column p-3">
-                <div>
-                    <div className="d-flex justify-content-between mt-3">
-                        <h3>
-                            {post.id}. {post.title}
-                        </h3>
-                        <button className="btn h-50 btn-primary" onClick={backToPost}>
-                            Back to posts
-                        </button>
-                    </div>
-                    <p className="mt-4">{post.body}</p>
-                </div>
-                {loading ? (
-                    <div className="text-center">
-                        <span
-                            className="spinner-grow spinner-grow-sm mx-2"
-                            role="status"
-                            aria-hidden="true"
-                        ></span>
-                        <span
-                            className="spinner-grow spinner-grow-sm mx-2"
-                            role="status"
-                            aria-hidden="true"
-                        ></span>
-                        <span
-                            className="spinner-grow spinner-grow-sm mx-2"
-                            role="status"
-                            aria-hidden="true"
-                        ></span>
-                    </div>
-                ) : (
-                    <>
-                        {commentsData.length > 0 ? (
-                            <div>
-                                {commentsData.map((comment, index) => (
-                                    <div
-                                        key={index}
-                                        className="container-fluid d-flex flex-column"
-                                    >
-                                        <div className="mt-2 border border-dark p-3">
-                                            <h4>{comment.body}</h4>
-                                            <p className="text-end"> - By {comment.user.username}</p>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        ) : (
-                            <h3>"</h3>
-                        )}
-                    </>
-                )}
+      <div className="container w-50">
+        <marquee>
+          <img src={errorSymbol} alt="Loading ... " style={{ opacity: 0.5 }} />
+          {error}
+        </marquee>
+      </div>
+    );
+  }
+  return (
+    <div className="container">
+      <button className="btn btn-primary float-end my-2">
+        <a href="#add" className="text-white text-decoration-none">
+          Add post
+        </a>
+      </button>
+      <div className="card card1">
+        {postData.map((postData, index) => (
+          <div
+            key={index}
+            className="post-data m-3 p-3 w-100"
+            onClick={() => handlePostClick(postData.id)}
+          >
+            <div className="post-content card-body p-3 ">
+              <h4 className="post-heading card-title">
+                {postData.id}. {postData.title}
+              </h4>
+              <div className="card-text">{postData.body}</div>
             </div>
-        </div>
-    );
-};
-export default Comments;
+            <div className="postUser-name card-footer text-end">
+              - By {postData.username}
+            </div>
+          </div>
+        ))}
+      </div>
+      <div id="add">
+        <Addpost onAddPost={onAddPost} />
+      </div>
+      <a href="#root">
+        <button className="arrow m-3">
+          <i className="fa fa-arrow-up"></i>
+        </button>
+      </a>
+    </div>
+  );
+}
+export default Posts;
+
+import React, { useState } from "react";
+function Addpost({ onAddPost }) {
+  const [formData, setFormData] = useState({
+    name: "",
+    data: "",
+    title: "",
+    postId: 150,
+  });
+  const onValChange = (event) => {
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [event.target.name]: event.target.value,
+    }));
+  };
+  function addComment(event) {
+    event.preventDefault();
+    onAddPost({ ...formData, postId: formData.postId + 1 });
+    setFormData({ name: "", data: "", title: "", postId: formData.postId + 1 });
+  }
+  return (
+    <div>
+      <div className="add-post p-3 m-3">
+        <h5 className="text-decoration-underline">Add posts !!</h5>
+        <form className="d-flex align-items-center" onSubmit={addComment}>
+          <div>
+            <label htmlFor="title" className="fs-4">
+              Title :
+            </label>
+            <input
+              type="text"
+              className="form-control box-shadow m-2 d-inline w-75"
+              id="title"
+              name="title"
+              value={formData.title}
+              onChange={onValChange}
+              required
+            />
+          </div>
+          <div className="d-flex flex-grow-1 align-items-center ">
+            <label htmlFor="data" className="me-2">
+              Data :
+            </label>
+            <textarea
+              name="data"
+              id="data"
+              cols="20"
+              rows="2"
+              className="form-control box-shadow d-inline w-75"
+              value={formData.data}
+              onChange={onValChange}
+              required
+            ></textarea>
+          </div>
+          <div>
+            <label htmlFor="name">Name : </label>
+            <input
+              type="text"
+              className="form-control box-shadow m-2 d-inline w-75"
+              id="name"
+              name="name"
+              value={formData.name}
+              onChange={onValChange}
+              required
+            />
+          </div>
+          <button className="btn btn-primary h-50" type="submit">
+            Add comment
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+}
+export default Addpost;

@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom';
-import './Navbar.css'
 import { FaBars } from "react-icons/fa";
-
+import './Navbar.css'
 
 const Navbar = () => {
     return (
@@ -11,7 +10,7 @@ const Navbar = () => {
                     <Link className="navbar-brand" to="/">Post</Link>
                     <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                         <span className="navbar-toggler-icon">
-                        <FaBars />
+                            <FaBars />
                         </span>
                     </button>
                     <div className="collapse navbar-collapse" id="navbarNav">

@@ -3,15 +3,14 @@ import { useState } from "react";
 const AddComment = ({ addNewComment, isSubmitting }) => {
   const [commentData, setCommentData] = useState({
     newComment: '',
-    userId: 14,
   });
-
-  function addComment() {
+  const addComment = () => {
     addNewComment(commentData)
     setCommentData({
       newComment: '',
     })
   }
+
   return (
     <>
       <div className="comment-box p-2 mt-3">

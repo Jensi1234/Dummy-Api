@@ -70,7 +70,6 @@ const PostDetails = () => {
     setEditCommentId(comment.id)
     setEditComment(comment.body)
   }
-console.log(editComment)
 
   const submitComment = async (id) => {
     const updateComment = await updatedCommentById(id, editComment)
@@ -79,11 +78,10 @@ console.log(editComment)
         return { ...comment, body: editComment }
       }
       return comment
-     })
+    })
     setComment(updatedComment)
     setEditComment(updatedComment)
     setEditCommentId(null)
-
   }
 
   if (isLoading) {

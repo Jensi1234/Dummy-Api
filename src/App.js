@@ -1,19 +1,21 @@
 import './App.css';
 import { Routes, Route, BrowserRouter } from "react-router-dom";
-import Post from './Post'
-import User from './User'
-import Comment from './Comment';
-import UserDetail from './UserDetail'
+import Posts from './components/Posts'
+import Users from './components/Users';
+import PostDetails from './components/PostDetails';
+import UserDetails from './components/UserDetails';
+import Navbar from './components/Navbar'
 
 function App() {
   return (
     <div >
       <BrowserRouter>
+        <Navbar />
         <Routes>
-          <Route path='/' element={<Post />} />
-          <Route path='/user' element={<User />} />
-          <Route path='/post/:pid' element={<Comment />} />
-          <Route path='/user/:userId' element={<UserDetail/>} />
+          <Route path='/' element={<Posts />} />
+          <Route path='/user' element={<Users />} />
+          <Route path='/post/:pid' element={<PostDetails />} />
+          <Route path='/user/:userId' element={<UserDetails />} />
         </Routes>
       </BrowserRouter>
     </div>
@@ -21,3 +23,6 @@ function App() {
 };
 
 export default App;
+
+
+
