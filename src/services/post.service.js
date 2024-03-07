@@ -1,7 +1,7 @@
 export const getAllPost = async () => {
   const postData = await fetch('https://dummyjson.com/posts?limit=150')
   const postList = await postData.json()
-  return postList;
+  return postList.posts;
 }
 
 export const getPostById = async (pid) => {
@@ -33,8 +33,8 @@ export const deletePostById = async (postId) => {
   return deletedPost;
 }
 
-export const updatedPostById = async (id, title,body ) => {
-  const response = await fetch(`https://dummyjson.com/posts/${id}`,
+export const updatedPostById = async (postId, title,body ) => {
+  const response = await fetch(`https://dummyjson.com/posts/${postId}`,
     {
       method: 'PUT', 
       headers: { 'Content-Type': 'application/json' },
@@ -43,9 +43,6 @@ export const updatedPostById = async (id, title,body ) => {
         body: body
       })
     })
-  if (!response.ok) {
-    throw new Error('Failed to add a new comment');
-  }
   const newEditedPost = await response.json()
   return newEditedPost;
 }

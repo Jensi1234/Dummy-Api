@@ -1,7 +1,7 @@
 export const getCommentsPostById = async (pid) => {
   const commentData = await fetch(`https://dummyjson.com/posts/` + pid + `/comments`)
   const commentList = await commentData.json()
-  return commentList
+  return commentList.comments
 }
 
 export const setNewComment = async (commentData, pid) => {
@@ -14,9 +14,6 @@ export const setNewComment = async (commentData, pid) => {
       userId: 5,
     }),
   });
-  if (!response.ok) {
-    throw new Error('Failed to add a new comment');
-  }
   const newComment = await response.json();
   return newComment
 }
@@ -29,18 +26,14 @@ export const deleteCommentById = async (commentId) => {
   return deletedComment;
 }
 
-export const updatedCommentById = async (id,body) => {
-  const response = await fetch(`https://dummyjson.com/comments/${id}`, {
+export const updatedCommentById = async (commentId,body) => {
+  const response = await fetch(`https://dummyjson.com/comments/${commentId}`, {
     method: 'PUT', 
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({
     body: body,
   })
     })
-  
-  if (!response.ok) {
-    throw new Error('Failed to add a new comment');
-  }
   const newEditedComment = await response.json();
   return newEditedComment
 }

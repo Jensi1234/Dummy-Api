@@ -33,3 +33,9 @@
     font-family: "Dancing Script", cursive;
     color: #034456;
 }
+
+.loading-gif {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+}

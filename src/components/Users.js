@@ -1,30 +1,13 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
-import gif from './Iphone-spinner-2.gif'
+import gif from './Iphone-spinner-2.gif';
 import { getAllUser } from "../services/user.service";
 import './Users.css'
+import useFetchData from "../hooks/useFetchData";
 
 const Users = () => {
   const navigate = useNavigate()
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState();
-  const [users, setUsers] = useState([])
-
-  useEffect(() => {
-    setIsLoading(true);
-    const usersDetails = async () => {
-
-      try {
-        const userList = await getAllUser()
-        setUsers(userList.users)
-      } catch (e) {
-        console.log('error', e)
-        setError("Error while loading data");
-      }
-    }
-    usersDetails()
-    setIsLoading(false);
-  }, [])
+  const {loading: isLoading, error, data: users} = useFetchData(getAllUser);
 
   if (isLoading) {
     return (

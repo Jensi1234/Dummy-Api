@@ -3,29 +3,12 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import gif from './Iphone-spinner-2.gif'
 import { getUserById } from "../services/user.service";
 import './UserDetails.css'
+import useFetchData from "../hooks/useFetchData";
 
 const UserDetails = () => {
-  const navigate = useNavigate()
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState();
-  const [user, setUser] = useState([]);
+  const navigate = useNavigate();
   const { userId } = useParams();
-
-  useEffect(() => {
-    setIsLoading(true);
-
-    const fetchUserDetails = async (userId) => {
-      try {
-        const userData = await getUserById(userId)
-        setUser(userData);
-      } catch (error) {
-        console.error('Error fetching post details:', error);
-        setError("Error while loading data");
-      }
-    }
-    fetchUserDetails(userId);
-    setIsLoading(false);
-  }, [userId]);
+  const { loading: isLoading, error, data: user } = useFetchData(getUserById, userId);
 
   if (isLoading) {
     return (

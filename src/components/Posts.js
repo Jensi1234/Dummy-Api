@@ -9,54 +9,43 @@ import AddPost from './AddPost';
 import { deletePostById, getAllPost, setNewPost } from '../services/post.service';
 import { updatedPostById } from '../services/post.service';
 import { getAllUser } from '../services/user.service';
+import useFetchData from '../hooks/useFetchData';
 
 const Posts = () => {
   const navigate = useNavigate()
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState()
-  const [posts, setPosts] = useState([])
-  const [users, setUsers] = useState([])
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [editPostTitle, setEditPostTitle] = useState()
   const [editPostBody, setEditPostBody] = useState()
   const [editPostId, setEditPostId] = useState()
+  const { loading: isLoading, error, data: posts, setData: setPosts } = useFetchData(getAllPost);
+  const { data: users } = useFetchData(getAllUser);
 
   useEffect(() => {
-    const postsDetails = async () => {
-      setIsLoading(true);
 
-      try {
-        const postList = await getAllPost()
-        const userList = await getAllUser()
-        const users = userList.users || []
-        const fetchedPosts = (postList.posts || []).map((post) => {
-          const user = users.find((user) => user.id === post.userId)
-          return {
-            ...post,
-            username: user?.username,
-          }
-        })
-        setPosts(fetchedPosts)
-        setUsers(userList.users)
-      } catch (e) {
-        console.log('error', e)
-        setError("Error while loading posts");
-      }
-      setIsLoading(false);
+    try {
+      const fetchedPosts = (posts || []).map((post) => {
+        const user = users.find((user) => user.id === post.userId)
+        return {
+          ...post,
+          username: user?.username,
+        }
+      })
+      setPosts(fetchedPosts)
+    } catch (e) {
+      console.log('error', e)
     }
-    postsDetails()
-  }, [])
+  }, [users])
 
   const addNewPost = async (postData) => {
     console.log('postData', postData)
     setIsSubmitting(true)
+
     try {
       const newPost = await setNewPost(postData)
       newPost.username = 'jane'
       setPosts([...posts, newPost]);
     } catch (error) {
       console.error('Error adding new post:', error);
-      setError('Error adding new post');
     }
     setIsSubmitting(false);
 
@@ -64,6 +53,7 @@ const Posts = () => {
 
   const deletePost = async (postId) => {
     console.log(postId)
+
     try {
       const deletedPost = await deletePostById(postId);
       setPosts(posts.filter((post) => post.id !== postId))
@@ -79,16 +69,15 @@ const Posts = () => {
     setEditPostBody(post.body)
   }
 
-  const submitPost = async (id) => {
-    const updatePost = await updatedPostById(id, editPostTitle, editPostBody)
+  const submitPost = async (postId) => {
+    const updatePost = await updatedPostById(postId, editPostTitle, editPostBody);
     const updatedPost = posts.map((post) => {
-      if (post.id == id) {
+      if (post.id == postId) {
         return { ...post, title: editPostTitle, body: editPostBody }
       }
       return post
     })
-    console.log(updatePost)
-    setPosts(updatePost)
+    setPosts(updatedPost)
     setEditPostId(null)
   }
 
